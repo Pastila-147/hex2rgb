@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export default function ColorConverter() {
     const [hex, setHex] = useState('#');
-    const [rgb, setRgb] = useState('rgb');
+    const [rgb, setRgb] = useState('');
     const [error, setError] = useState(false);
 
     const handleChange = (e) => {
