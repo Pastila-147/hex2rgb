@@ -1,86 +1,74 @@
 import { useState } from 'react';
 
 export default function ColorConverter() {
-    const [hexColor, setHexColor] = useState('#');
-    const [rgbColor, setRgbColor] = useState('');
+    const [hex, setHex] = useState('#');
+    const [rgb, setRgb] = useState('rgb');
     const [error, setError] = useState(false);
 
-    const containerStyle = {
-        backgroundColor: error
-            ? '#FF6347'
-            : (hexColor.length === 7 ? hexColor : '#fff'),
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontFamily: 'sans-serif',
-    };
-
-    const onValueChange = (e) => {
+    const handleChange = (e) => {
         const value = e.target.value;
-        setHexColor(value);
+        setHex(value);
 
-        if (error) {
-            setError(false);
-            setRgbColor('');
-        }
-    };
+        if (value.length === 7) {
+            const isValidHex = /^#[0-9A-Fa-f]{6}$/.test(value);
 
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        if (hexColor.length === 7 && /^#[0-9A-Fa-f]{6}$/.test(hexColor)) {
-            const r = parseInt(hexColor.slice(1, 3), 16);
-            const g = parseInt(hexColor.slice(3, 5), 16);
-            const b = parseInt(hexColor.slice(5, 7), 16);
-            setRgbColor(`rgb(${r}, ${g}, ${b})`);
-            setError(false);
+            if (isValidHex) {
+                const r = parseInt(value.slice(1, 3), 16);
+                const g = parseInt(value.slice(3, 5), 16);
+                const b = parseInt(value.slice(5, 7), 16);
+                setRgb(`rgb(${r}, ${g}, ${b})`);
+                setError(false);
+            } else {
+                setRgb('');
+                setError(true);
+            }
         } else {
-            setRgbColor('');
-            setError(true);
+            setRgb('');
+            setError(false);
         }
     };
 
     return (
-        <div className="container" style={containerStyle}>
-            <form className="ColorConverterForm" onSubmit={onSubmit}>
-                <input
-                    id="color"
-                    name="color"
-                    className="ColorConverterInput"
-                    onChange={onValueChange}
-                    value={hexColor}
-                    maxLength={7}
-                    placeholder="#RRGGBB"
-                    style={{
-                        padding: '0.5rem 1rem',
-                        fontSize: '1rem',
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
-                        textAlign: 'center',
-                        width: '160px',
-                    }}
-                />
-                <label
-                    className="ColorConverterBox"
-                    htmlFor="color"
-                    style={{
-                        display: 'block',
-                        padding: '0.5rem 1rem',
-                        marginTop: '1rem',
-                        fontSize: '1rem',
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
-                        textAlign: 'center',
-                        color: error ? '#8B0000' : 'black',
-                        backgroundColor: "white"
-
-                    }}
-                >
-                    {error ? 'Ошибка!' : rgbColor}
-                </label>
-            </form>
+        <div
+            style={{
+                backgroundColor: error ? '#ff0000' : rgb,
+                height: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '1rem',
+                fontFamily: 'sans-serif'
+            }}
+        >
+            <input
+                value={hex}
+                onChange={handleChange}
+                placeholder="#RRGGBB"
+                maxLength={7}
+                style={{
+                    padding: '0.5rem 1rem',
+                    fontSize: '1.2rem',
+                    borderRadius: '4px',
+                    border: '1px solid #CCCCCC',
+                    textAlign: 'center',
+                    width: '160px'
+                }}
+            />
+            <div
+                style={{
+                    padding: '0.5rem 1rem',
+                    fontSize: '1.2rem',
+                    fontWeight: '500',
+                    borderRadius: '4px',
+                    backgroundColor:'white',
+                    color: error ? '#8B0000' : 'black',
+                    textAlign: 'center',
+                    width: '160px'
+                }}
+            >
+                {error ? 'Ошибка' : rgb}
+            </div>
         </div>
     );
 }
